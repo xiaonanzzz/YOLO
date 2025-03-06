@@ -9,6 +9,30 @@ from io import BytesIO
 from tqdm import tqdm
 import uuid
 
+"""
+Example of using the PrepareYoloData class:
+
+Assuming df_train and df_val are already loaded and have the following columns:
+- url: str, the url of the image
+- annotations: str, the annotations of the image, which is a list of dicts, 
+    - item: {
+        "left": int,
+        "top": int,
+        "width": int,
+        "height": int,
+        "label": str
+    }
+df_all = pd.concat([df_train, df_val])
+df_all['image'] = df_all['url']
+df_all['image_type'] = 'url'
+df_all['annotations'] = df_all['annotations'].apply(lambda x_list: [{"category": x['label'], "bbox": [x['left'], x['top'], x['width'], x['height']]} for x in eval(x_list)])
+df_all['label_type'] = 'xywh'
+
+PrepareYoloData().process_df(df_all, output_dir="data/custom_dataset")
+
+"""
+
+
 class PrepareYoloData:
     
     def _extract_unique_categories(self, df):
