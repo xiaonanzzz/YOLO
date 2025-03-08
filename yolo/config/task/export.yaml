@@ -1,0 +1,9 @@
+task: export
+
+# Path to the checkpoint file to be converted
+checkpoint_path: path/to/your/checkpoint.ckpt
+
+# Optional: Path where the exported weights will be saved
+# If not specified, defaults to "exported_weights.pt"
+output_path: exported_weights.pt
+
