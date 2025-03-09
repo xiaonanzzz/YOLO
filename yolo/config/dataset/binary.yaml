@@ -1,0 +1,8 @@
+# this cnofig file is for users to override the class_num and class_list at their own inference code
+# e.g. cfg.dataset.class_num = 1
+# e.g. cfg.dataset.class_list = ['Object']
+
+
+class_num: 1  # this is for overriding
+class_list: ['Object']
+

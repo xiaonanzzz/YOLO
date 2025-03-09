@@ -328,3 +328,59 @@ class StreamDataLoader:
 
     def __len__(self):
         return self.queue.qsize() if not self.is_stream else 0
+
+
+class ImageListDataLoader:
+
+    @staticmethod
+    def list_images_from_folder(image_folder: str):
+        folder_path = Path(image_folder)
+        image_list = []
+        for file_path in folder_path.rglob("*"):
+            if file_path.suffix.lower() in [".jpg", ".jpeg", ".png", ".bmp"]:
+                image_list.append(file_path)
+        return image_list
+
+    def __init__(self, data_cfg: DataConfig, image_list: List[str]):
+        self.image_list = image_list
+        self.running = True
+
+        self.transform = AugmentationComposer([], data_cfg.image_size)
+        self.stop_event = Event()
+        self.queue = Queue()
+        self.thread = Thread(target=self.load_data)
+        self.thread.start()
+
+    def load_data(self):
+        for image_path in self.image_list:
+            self.process_image(image_path)
+
+    def process_image(self, image_path):
+        image = Image.open(image_path).convert("RGB")
+        if image is None:
+            raise ValueError(f"Error loading image: {image_path}")
+        self.process_frame(image)
+
+    def process_frame(self, frame):
+        origin_frame = frame
+        frame, _, rev_tensor = self.transform(frame, torch.zeros(0, 5))
+        frame = frame[None]
+        rev_tensor = rev_tensor[None]
+        self.queue.put((frame, rev_tensor, origin_frame))
+
+    def __iter__(self) -> Generator[Tensor, None, None]:
+        return self
+
+    def __next__(self) -> Tensor:
+        try:
+            frame = self.queue.get(timeout=1)
+            return frame
+        except Empty:
+            raise StopIteration
+
+    def stop(self):
+        self.running = False
+        self.thread.join(timeout=1)
+
+    def __len__(self):
+        return self.queue.qsize()
