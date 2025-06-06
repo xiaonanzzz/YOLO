@@ -21,13 +21,24 @@ Welcome to the official implementation of YOLOv7[^1] and YOLOv9[^2], YOLO-RD[^3]
 
 ## TL;DR
 
-- This is the official YOLO model implementation with an MIT License.
+- This is a self maintained folk for quick experimental purpose. Thus, I'm not doing any code quality control. But it is under MIT license. 
 - For quick deployment: you can directly install by pip+git:
 
 ```shell
-pip install git+https://github.com/WongKinYiu/YOLO.git
-yolo task.data.source=0 # source could be a single file, video, image folder, webcam ID
+pip install git+https://github.com/xiaonanzzz/YOLO.git
 ```
+
+- Or you are pip install in the developer mode
+```
+git clone https://github.com/xiaonanzzz/YOLO.git
+# active virtual env or conda env if you don't want to install this package in global python env. 
+pip install -e YOLO
+```
+
+
+
+
+
 
 ## Introduction
 
