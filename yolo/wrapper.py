@@ -134,6 +134,10 @@ class CocoDetector:
         self.device = device
         self.class_list = dataset_cfg.class_list
 
+    def class_id_to_label(self, class_id):
+        # convert class_id to text label, e.g. 0 -> "Person", see yolo/config/dataset/coco.yaml
+        return self.class_list[class_id]
+
     def predict_draw_one_image(self, image, nms_confidence, nms_iou, max_bbox):
         pred_bbox = self.predict_and_return_bboxes(image, nms_confidence, nms_iou, max_bbox)
 
